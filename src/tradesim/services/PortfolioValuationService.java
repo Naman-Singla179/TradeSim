@@ -10,8 +10,7 @@ import java.util.Map;
 public class PortfolioValuationService {
 
     public double calculateStockHoldingValue(Portfolio portfolio, Map<String, Stock> marketQuotes) {
-        if (portfolio == null || marketQuotes == null)
-            return 0.0;
+        if (portfolio == null || marketQuotes == null) return 0.0;
         double totalValue = 0.0;
         for (PortfolioHolding holding : portfolio.getHoldings().values()) {
             if (holding.getQuantity() > 0) {
@@ -24,14 +23,12 @@ public class PortfolioValuationService {
     }
 
     public double calculateTotalNetWorth(User user, Portfolio portfolio, Map<String, Stock> marketQuotes) {
-        if (user == null)
-            return 0.0;
+        if (user == null) return 0.0;
         return user.getCashBalance() + calculateStockHoldingValue(portfolio, marketQuotes);
     }
 
     public double calculateUnrealizedPnL(Portfolio portfolio, Map<String, Stock> marketQuotes) {
-        if (portfolio == null || marketQuotes == null)
-            return 0.0;
+        if (portfolio == null || marketQuotes == null) return 0.0;
         double totalPnL = 0.0;
         for (PortfolioHolding holding : portfolio.getHoldings().values()) {
             if (holding.getQuantity() > 0) {
@@ -44,8 +41,7 @@ public class PortfolioValuationService {
     }
 
     public double calculateTotalInvested(Portfolio portfolio) {
-        if (portfolio == null)
-            return 0.0;
+        if (portfolio == null) return 0.0;
         double totalInvested = 0.0;
         for (PortfolioHolding holding : portfolio.getHoldings().values()) {
             if (holding.getQuantity() > 0) {
@@ -71,8 +67,8 @@ public class PortfolioValuationService {
         sb.append(String.format("Total Net Worth:       Rs. %,.2f%n", netWorth));
         sb.append(String.format("Unrealized P&L:        Rs. %,+.2f (%+.2f%%)%n", unrealizedPnL, pnlPercent));
         sb.append("----------------------------------------------------------------------\n");
-        sb.append(String.format("%-10s %-8s %-12s %-12s %-14s %-12s%n",
-                "Ticker", "Qty", "Avg Buy", "Live Price", "Current Val", "P&L"));
+        sb.append(String.format("%-10s %-8s %-12s %-12s %-14s %-12s%n", 
+            "Ticker", "Qty", "Avg Buy", "Live Price", "Current Val", "P&L"));
         sb.append("----------------------------------------------------------------------\n");
 
         for (PortfolioHolding h : portfolio.getHoldings().values()) {
@@ -82,7 +78,7 @@ public class PortfolioValuationService {
                 double val = h.getQuantity() * live;
                 double pnl = (live - h.getAverageBuyPrice()) * h.getQuantity();
                 sb.append(String.format("%-10s %-8d Rs. %-8.2f Rs. %-8.2f Rs. %-10.2f Rs. %+-8.2f%n",
-                        h.getTicker(), h.getQuantity(), h.getAverageBuyPrice(), live, val, pnl));
+                    h.getTicker(), h.getQuantity(), h.getAverageBuyPrice(), live, val, pnl));
             }
         }
         sb.append("======================================================================\n");

@@ -28,15 +28,13 @@ public class TradeSettlementService {
 
     public User getUser(String userId) {
         User user = userRegistry.get(userId);
-        if (user == null)
-            throw new UserNotFoundException("User not found: " + userId);
+        if (user == null) throw new UserNotFoundException("User not found: " + userId);
         return user;
     }
 
     public Portfolio getPortfolio(String userId) {
         Portfolio portfolio = portfolioRegistry.get(userId);
-        if (portfolio == null)
-            throw new UserNotFoundException("Portfolio not found: " + userId);
+        if (portfolio == null) throw new UserNotFoundException("Portfolio not found: " + userId);
         return portfolio;
     }
 
@@ -48,8 +46,8 @@ public class TradeSettlementService {
         return Collections.unmodifiableMap(portfolioRegistry);
     }
 
-    public TransactionReceipt settleTrade(BuyOrder buyOrder, SellOrder sellOrder,
-            int matchQty, double execPrice, double brokerageFee) {
+    public TransactionReceipt settleTrade(BuyOrder buyOrder, SellOrder sellOrder, 
+                                          int matchQty, double execPrice, double brokerageFee) {
         User buyer = getUser(buyOrder.getUserId());
         User seller = getUser(sellOrder.getUserId());
         Portfolio buyerPortfolio = getPortfolio(buyOrder.getUserId());
@@ -60,16 +58,18 @@ public class TradeSettlementService {
 
         if (buyer.getCashBalance() < totalCost) {
             throw new InsufficientFundsException(
-                    String.format("Buyer [%s] has insufficient funds. Required: Rs. %,.2f, Available: Rs. %,.2f",
-                            buyer.getUsername(), totalCost, buyer.getCashBalance()));
+                String.format("Buyer [%s] has insufficient funds. Required: Rs. %,.2f, Available: Rs. %,.2f",
+                    buyer.getUsername(), totalCost, buyer.getCashBalance())
+            );
         }
 
         PortfolioHolding sellerHolding = sellerPortfolio.getHolding(sellOrder.getTicker());
         int sellerShares = (sellerHolding != null) ? sellerHolding.getQuantity() : 0;
         if (sellerShares < matchQty) {
             throw new InsufficientSharesException(
-                    String.format("Seller [%s] has insufficient shares of %s. Required: %d, Available: %d",
-                            seller.getUsername(), sellOrder.getTicker(), matchQty, sellerShares));
+                String.format("Seller [%s] has insufficient shares of %s. Required: %d, Available: %d",
+                    seller.getUsername(), sellOrder.getTicker(), matchQty, sellerShares)
+            );
         }
 
         buyer.debit(totalCost);
@@ -79,11 +79,12 @@ public class TradeSettlementService {
 
         buyOrder.reduceQuantity(matchQty);
         sellOrder.reduceQuantity(matchQty);
-
+        
         String receiptId = "RCP-" + (++receiptCounter);
         TransactionReceipt receipt = new TransactionReceipt(
-                receiptId, buyOrder.getOrderId(), sellOrder.getOrderId(),
-                buyOrder.getTicker(), matchQty, execPrice, brokerageFee);
+            receiptId, buyOrder.getOrderId(), sellOrder.getOrderId(),
+            buyOrder.getTicker(), matchQty, execPrice, brokerageFee
+        );
         transactionLedger.add(receipt);
         return receipt;
     }
@@ -96,8 +97,7 @@ public class TradeSettlementService {
         List<TransactionReceipt> filtered = new ArrayList<>();
         if (ticker != null) {
             for (TransactionReceipt r : transactionLedger) {
-                if (r.getTicker().equalsIgnoreCase(ticker))
-                    filtered.add(r);
+                if (r.getTicker().equalsIgnoreCase(ticker)) filtered.add(r);
             }
         }
         return filtered;

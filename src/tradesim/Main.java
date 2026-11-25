@@ -1,4 +1,4 @@
-package tradesim;
+﻿package tradesim;
 
 import tradesim.exceptions.*;
 import tradesim.models.*;

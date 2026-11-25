@@ -30,7 +30,8 @@ public class Portfolio {
         int available = (holding == null) ? 0 : holding.getQuantity();
         if (available < quantity) {
             throw new InsufficientSharesException(
-                    String.format("Cannot sell %d shares of %s. You hold: %d", quantity, symbol, available));
+                String.format("Cannot sell %d shares of %s. You hold: %d", quantity, symbol, available)
+            );
         }
         holding.removeShares(quantity, price);
     }
@@ -43,9 +44,7 @@ public class Portfolio {
         return Collections.unmodifiableMap(holdings);
     }
 
-    public String getUserId() {
-        return userId;
-    }
+    public String getUserId() { return userId; }
 
     @Override
     public String toString() {

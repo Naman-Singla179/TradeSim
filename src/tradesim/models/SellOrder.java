@@ -8,8 +8,7 @@ public class SellOrder extends Order {
 
     @Override
     public int compareTo(Order other) {
-        if (other == null)
-            return -1;
+        if (other == null) return -1;
         // Lowest limit price gets priority
         int priceComparison = Double.compare(this.getLimitPrice(), other.getLimitPrice());
         if (priceComparison != 0) {
